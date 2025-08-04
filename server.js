@@ -6,9 +6,22 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ CORS - allow only Vercel frontend
+// ✅ Allowed origins
+const allowedOrigins = [
+  'http://localhost:3000', // for local dev
+  'https://capzora-interview-frontend.vercel.app',
+  'https://capzora-interview-frontend-riqzumq1o.vercel.app',
+];
+
+// ✅ CORS middleware
 app.use(cors({
-  origin: ['https://capzora-interview-frontend.vercel.app', 'https://capzora-interview-frontend-riqzumq1o.vercel.app'],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('❌ Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST'],
   credentials: true,
 }));
@@ -28,12 +41,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 const scheduleRoutes = require('./routes/schedule');
 app.use('/api/schedule', scheduleRoutes);
 
-// ✅ Health check route
+// ✅ Health check
 app.get('/', (req, res) => {
   res.send('✅ Capzora.AI Interview Scheduler API is live.');
 });
 
 // ✅ Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT} or on deployed environment`);
+  console.log(`🚀 Server running at http://localhost:${PORT} or deployed environment`);
 });
