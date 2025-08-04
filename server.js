@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ CORS - allow only Vercel frontend
 app.use(cors({
-  origin: ['https://capzora-interview-frontend-riqzumq1o.vercel.app'],
+  origin: ['https://capzora-interview-frontend.vercel.app', 'https://capzora-interview-frontend-riqzumq1o.vercel.app'],
   methods: ['GET', 'POST'],
   credentials: true,
 }));
